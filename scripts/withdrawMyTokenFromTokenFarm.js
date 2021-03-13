@@ -4,26 +4,6 @@ module.exports = async function (callback) {
     const accounts = await new web3.eth.getAccounts()
     const myToken = await MyToken.deployed()
     const farmToken = await FarmToken.deployed()
-    // Returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through transferFrom.
-    // This is zero by default.
-    const allowanceBefore = await myToken.allowance(
-        accounts[0],
-        farmToken.address
-    )
-    console.log(
-        "Amount of MyToken FarmToken is allowed to transfer on our behalf Before: " +
-        allowanceBefore.toString()
-    )
-    // In order to allow the Smart Contract to transfer to MyToken (ERC-20) on the accounts[0] behalf,
-    // we must explicitly allow it.
-    // We allow farmToken to transfer x amount of MyToken on our behalf
-    await myToken.approve(farmToken.address, web3.utils.toWei("100", "ether"))
-    // Validate that the farmToken can now move x amount of MyToken on our behalf
-    const allowanceAfter = await myToken.allowance(accounts[0], farmToken.address)
-    console.log(
-        "Amount of MyToken FarmToken is allowed to transfer on our behalf After: " +
-        allowanceAfter.toString()
-    )
     // Verify accounts[0] and farmToken balance of MyToken before and after the transfer
     balanceMyTokenBeforeAccounts0 = await myToken.balanceOf(accounts[0])
     balanceMyTokenBeforeFarmToken = await myToken.balanceOf(farmToken.address)
@@ -48,8 +28,8 @@ module.exports = async function (callback) {
         web3.utils.fromWei(balanceFarmTokenBeforeFarmToken.toString())
     )
     // Call Deposit function from FarmToken
-    console.log("Call Deposit Function")
-    await farmToken.deposit(web3.utils.toWei("100", "ether"))
+    console.log("Call Withdraw Function")
+    await farmToken.withdraw(web3.utils.toWei("100", "ether"))
     console.log("*** My Token ***")
     balanceMyTokenAfterAccounts0 = await myToken.balanceOf(accounts[0])
     balanceMyTokenAfterFarmToken = await myToken.balanceOf(farmToken.address)
